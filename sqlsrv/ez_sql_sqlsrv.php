@@ -52,6 +52,7 @@
 		var $dbname = false;
 		var $dbhost = false;
 		var $rows_affected = false;
+		var $connectionOptions = false;
 
 		//if we want to convert Queries in MySql syntax to MS-SQL syntax. Yes, there
 		//are some differences in query syntax.
@@ -62,13 +63,14 @@
 		*  same time as initialising the ezSQL_mssql class
 		*/
 
-		function ezSQL_sqlsrv($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $convertMySqlToMSSqlQuery=true)
+		function ezSQL_sqlsrv($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $convertMySqlToMSSqlQuery=true, $connectionOptions = false)
 		{
 			$this->dbuser = $dbuser;
 			$this->dbpassword = $dbpassword;
 			$this->dbname = $dbname;
 			$this->dbhost = $dbhost;
 			$this->convertMySqlToMSSqlQuery = $convertMySqlToMSSqlQuery;
+			$this->connectionOptions = $connectionOptions;
 		}
 
 		/**********************************************************************
@@ -99,6 +101,10 @@
 				$connectionOptions["PWD"] = $dbpassword;
 			}
 //			$connectionOptions = array("UID" => $dbuser, "PWD" => $dbpassword, "Database" => $dbname);
+
+			if($this->connectionOptions) {
+				$connectionOptions += $this->connectionOptions;
+			}
 
 			if ( ( $this->dbh = @sqlsrv_connect($dbhost, $connectionOptions) ) === false )
 			{
